@@ -1,0 +1,8 @@
+HashMap和Hashtable的区别
+
+HashMap和Hashtable都实现了Map接口。主要的区别有：线程安全性，同步(synchronization)，以及速度。
+
+HashMap是异步的，可以接受null的key和value，而Hashtable是同步的，说明Hashtable是线程安全的，多个线程可以共享一个Hashtable；由于Hashtable是线程安全的
+也是同步的，所以在单线程环境下它比HashMap要慢。一般如果是异步并且只需要单一线程，俺么使用HashMap的性能要好过Hashtable，但是HashMap不能保证随着时间的推
+移Map中的元素次序是不变的。另一个区别是：迭代器的区别：HashMap的迭代器是Iterator是fail-fast迭代器，而Hashtable的迭代器enumerator不是fail-fast的。
+fail-fast机制的意思是：当多个线程对一个集合进行操作修改元素的时候，会出现报错。
