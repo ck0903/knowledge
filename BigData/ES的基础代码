@@ -1,0 +1,151 @@
+package day2;
+
+
+import org.elasticsearch.action.bulk.BulkRequestBuilder;
+import org.elasticsearch.action.bulk.BulkResponse;
+import org.elasticsearch.action.delete.DeleteRequest;
+import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.search.SearchRequestBuilder;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.search.SearchType;
+import org.elasticsearch.action.update.UpdateResponse;
+import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.common.transport.TransportAddress;
+import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.common.xcontent.XContentFactory;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.sort.SortOrder;
+import org.junit.Before;
+import org.junit.Test;
+import org.elasticsearch.transport.client.PreBuiltTransportClient;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.HashMap;
+
+
+/**
+ * Created by Administrator on 2017-7-25.
+ */
+public class testES {
+    TransportClient client;
+    //before标识在执行每个test方法之前运行
+    @Before
+    public void test0() throws UnknownHostException {
+        Settings settings = Settings.builder().put("cluster.name", "my-cluster").build();
+        //指定es集群中的节点信息
+        TransportAddress transportAddress = new InetSocketTransportAddress(InetAddress.getByName("172.18.18.22"),9300);
+        client = new PreBuiltTransportClient(settings).addTransportAddress(transportAddress);
+    }
+    String index = "hzgc";
+    String type = "dsj";
+    @Test
+    public void testInsert1(){
+        //向索引库中传入一个String字符串，还可以接受其他类型
+        String jsonStr = "{\"name\":\"zs\",\"age\":20}";
+        //添加一个id为7的数据
+        IndexResponse indexResponse = client.prepareIndex(index,type,"7")
+                .setSource(jsonStr)
+                .get();//get方法对execute().actionGet()进行了封装，get方法也是执行方法
+        System.out.println(indexResponse.getVersion());//得到这个数据的version，如果version=1，则代表是新添加的数据
+    }
+    @Test
+    public void testInsert2(){
+        HashMap<String,Object> hashMap = new HashMap<String, Object>();
+        hashMap.put("name","cz");
+        hashMap.put("age",28);
+        hashMap.put("idcard","123456789");
+        hashMap.put("pkey","stu");
+        hashMap.put("car","bezi");
+        hashMap.put("home","beijing");
+        hashMap.put("pid","zhuji");
+        IndexResponse indexResponse = client.prepareIndex(index,type,"10")
+                .setSource(hashMap).get();
+        System.out.println(indexResponse.getVersion());
+    }
+    @Test
+    //通过id去查询
+    public void testFind(){
+        GetResponse getResponse = client.prepareGet(index,type,"8").get();//查询id为7的数据
+        System.out.println(getResponse.getSourceAsString());
+    }
+    @Test
+    //局部更新操作
+    public void testUpdate() throws IOException {
+        XContentBuilder builder = XContentFactory.jsonBuilder().startObject()
+                .field("age",19).endObject();
+        UpdateResponse updateResponse = client.prepareUpdate(index,type,"8").setDoc(builder).get();
+        System.out.println(updateResponse.getVersion());
+    }
+    @Test
+    //批量操作
+    public void testBulk() throws IOException {
+        BulkRequestBuilder bulkRequestBuilder = client.prepareBulk();
+        IndexRequest indexRequest = new IndexRequest(index,type,"12");
+        XContentBuilder builder = XContentFactory.jsonBuilder().startObject().field("name","lsy")
+                .field("age",25).endObject();
+        indexRequest.source(builder);
+        DeleteRequest deleteRequest = new DeleteRequest(index,type,"7");
+        bulkRequestBuilder.add(indexRequest);
+        bulkRequestBuilder.add(deleteRequest);
+        BulkResponse bulkResponse = bulkRequestBuilder.get();
+    }
+    @Test
+    //条件查询
+    public void testfind(){
+        SearchResponse searchResponse = client.prepareSearch(index)
+                .setTypes(type)
+                .setQuery(QueryBuilders.matchQuery("name","lsy"))//指定查询条件,不支持通配符
+                    //.setQuery(QueryBuilders.multiMatchQuery("zs", "name","title"))//根据多个属性进行查询
+                    //.setQuery(QueryBuilders.matchAllQuery())//查询所有
+                    //.setQuery(QueryBuilders.queryString("name:z* AND age:20"))//支持通配符* ?，可以实现复杂查询，可以使用AND OR 之类的运算符(运算符要大写)
+                    //.setQuery(QueryBuilders.termQuery("name", "zs"))//在查询的时候不分词，主要针对 人名 地名等特殊的词语
+                    //工作中没有说明特殊需求，就是用默认的查询类型，如果对搜索准确度要求非常高，建议使用DFS_QUERY_THEN_FETCH,如果只追求查询效果，对其他的指标不关心，可以使用QUERY_AND_FETCH
+                 .setSearchType(SearchType.QUERY_THEN_FETCH)//指定查询类型，可以指定四种
+                 .setExplain(true)//返回的数据按照搜索词的相关度排序
+                 .setFrom(0)//分页查询
+                 .setSize(10)
+                 .addSort("age", SortOrder.DESC)//根据某个字段排序
+                  //过滤
+                  //.setPostFilter(FilterBuilders.rangeFilter("age").from(0).to(18).includeLower(true).includeUpper(false))//默认是闭区间
+                  //.setPostFilter(FilterBuilders.rangeFilter("age").gt(0).lt(18))
+                  //实现高亮
+                 .get();
+        SearchHits hits = searchResponse.getHits();
+        long totalHits = hits.getTotalHits();
+        System.out.println("总数：" + totalHits);
+        SearchHit[] hits2 = hits.getHits();
+        for(SearchHit searchHit : hits2){
+            System.out.println(searchHit.getSourceAsString());
+            System.out.println(searchHit.getId());
+        }
+
+
+    }
+  @Test
+    public void mohuFind(){
+        SearchResponse searchResponse = client.prepareSearch(index)
+                .setTypes(type)
+                .setExplain(true)
+                .setQuery(QueryBuilders.termQuery("name","cz"))
+                .setQuery(QueryBuilders.termQuery("idcard","123456789"))
+                .setQuery(QueryBuilders.termQuery("home","beijing"))
+                .setFrom(0)
+                .setSize(10)
+                .get();
+        SearchHits hits = searchResponse.getHits();
+        SearchHit[] hit = hits.getHits();
+        for(SearchHit searchHit : hit){
+            System.out.println(searchHit.getSourceAsString());
+        }
+  }
+
+
+}
