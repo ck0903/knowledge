@@ -1,0 +1,55 @@
+表结构：
+创建数据库：create database database_name(create table a (id varchar(300) primary key,name varchar(200) not null);)
+删除数据库：drop database database_name
+创建新表：create table tablename(name string,sex string)
+根据已有的表创建新表：create table a like b (使用旧表b创建新表a)
+删除新表：drop table tablename
+增加一个列：Alter table tablename add column (Alter table a add(addr char(50));)
+插入数据：insert into a (id,name) values("aa","bb");
+更新数据：update a set id="cc" where id="bb"
+删除数据：delete from a where id="cc";
+修改表名：alter table a rename to a1;
+表数据复制：insert into a (select * from b);
+复制表结构：create table a select * from b where 1>1;
+复制表结构和数据：create table a select * from b;
+复制指定字段：create table a as select id,name from b where 1>1;
+条件查询：select id,name (case gender when 0 then '男' when 1 then '女' end) gender from b
+
+
+数学函数：
+绝对值（abs（））：select abs(-2) value from dual;      --(2)
+取整函数（大）（ceil（））：select ceil(-2.001) value from dual;     ----(-2)
+取整函数（小）（floor（））：select floor(-2.001) value from dual;   -----(-3)
+取整函数（截取）（trunc（））：select trunc(-2.001)value from dual;  -----（-2）
+四舍五入（round（））：select round(1.23456,4)value from dual;       -----(1.2346)
+取平方（power（））：select power(4,2)value from dual;        ----(16)
+取平方根（sqrt（））：select sqrt(16)value from dual;         ----(4)
+取随机数（dbms_random（minvalue，maxvalue））：select dbms_random.value() from dual;(默认是0到1之间) select dbms_random.value(2,4) value from dual;(2到4之间的随机数)
+取集合的最大值：greater(value):select greatest(-1,2,3,4,5,6) value from dual;   -----(6)
+取集合的最小值：least（value）：select least(-1,2,3,4,5,6) value from dual;      -----(-1)
+
+
+实例：
+查询学号为D2的学生的信息：select * from a where num = 'D2';
+查询学号为S6的学生姓名：select name from a where num = 's6';
+查询成绩在60到80分的学生学号：select distinct num from b where (score>=60 and score<=80);
+查询所有姓王，并且名字是两个字的学生信息：select * from a where name like '王%';
+查询选修课号为“c1”且成绩非空的学生学号和成绩：select num scorce from elect where num='c1' and score is not null;
+查询选修课号为“c1”的学生学号和成绩，结果按成绩升序排序，如果成绩相同则按学号的降序排列：select Snum,score from elect where Cnum='C1' order by Score asc , Snum desc
+查询所有学生的学号、姓名、选修的课程号和成绩：select student.Snum,Sname,Cnum,Score from student,elect where student.Snum = elect.Snum
+
+
+sql语句表关联：
+外连接可分为左连接、右连接、完全外连接
+1、左连接 left join 或 left outer join
+SQL语句：select * from student left join course on student.ID=course.ID
+左外连接包含left join左表所有行，如果左表中某行在右表没有匹配，则结果中对应行右表的部分全部为空(NULL).
+2、右连接 right join 或 right outer join
+SQL语句：select * from student right join course on student.ID=course.ID
+右外连接包含right join右表所有行，如果左表中某行在右表没有匹配，则结果中对应左表的部分全部为空(NULL)。
+3、完全外连接 full join 或 full outer join
+SQL语句：select * from student full join course on student.ID=course.ID
+完全外连接包含full join左右两表中所有的行，如果右表中某行在左表中没有匹配，则结果中对应行右表的部分全部为空(NULL)，如果左表中某行在右表中没有匹配，
+则结果中对应行左表的部分全部为空(NULL)。
+内连接 join 或 inner join
+SQL语句：select * from student inner join course on student.ID=course.ID
