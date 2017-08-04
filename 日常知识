@@ -1,3 +1,4 @@
 ==和equals的区别
 “==”比较的是，对象在内存中的地址
 “equals”比较的是，对象在堆中的内容是否相同
+mvn clean package
