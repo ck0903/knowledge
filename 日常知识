@@ -14,7 +14,8 @@ java中String的常用方法
 
 3、 getChars() 截取多个字符
 　　void getChars(int sourceStart,int sourceEnd,char target[],int targetStart)
-　　sourceStart指定了子串开始字符的下标，sourceEnd指定了子串结束后的下一个字符的下标。因此， 子串包含从sourceStart到sourceEnd-1的字符。接收字符的数组由target指定，target中开始复制子串的下标值是targetStart。
+　　sourceStart指定了子串开始字符的下标，sourceEnd指定了子串结束后的下一个字符的下标。因此， 子串包含从sourceStart到sourceEnd-1的字符。
+  接收字符的数组由target指定，target中开始复制子串的下标值是targetStart。
 　　例：String s="this is a demo of the getChars method.";
 　　　　char buf[]=new char[20];
 　　　　s.getChars(10,14,buf,0);
