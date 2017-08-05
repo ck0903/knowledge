@@ -1,0 +1,52 @@
+synchronized 关键字解析
+同步锁依赖于对象，每个对象都有一个同步锁。
+现有一成员变量 Test，当线程 A 调用 Test 的 synchronized 方法，线程 A 获得 Test 的同步锁，同时，线程 B 也去调用 Test 的 synchronized 方法，
+此时线程 B 无法获得 Test 的同步锁，必须等待线程 A 释放 Test 的同步锁才能获得从而执行对应方法的代码。
+综上，正确使用 synchronized 关键字可确保原子性。
+synchronized 关键字的特性应用
+特性 1：
+当线程 A 调用某对象的synchronized 方法 或者 synchronized 代码块时，若同步锁未释放，其他线程调用同一对象的synchronized 方法 或者 
+synchronized 代码块时将被阻塞，直至线程 A 释放该对象的同步锁。
+
+DEMO1，synchronized 方法：
+DEMO2，synchronized 代码块：
+可见，当同步锁未释放时，其他线程将被阻塞，直至获得同步锁。
+而且 DEMO1 和 DEMO2 的输出结果是一样的，synchronized 方法 和 synchronized 代码块的不同之处在于 synchronized 方法 作用域较大，作用于整个方法，
+而 synchronized 代码块 可控制具体的作用域，更精准控制提高效率。（毕竟阻塞的都是时间啊）
+
+DEMO3，仅修改 main 方法：
+
+同步锁基于对象，只要锁的来源一致，即可达到同步的作用。所以，但对象不一样，则不能达到同步效果。
+特性 2：
+当线程 A 调用某对象的synchronized 方法 或者 synchronized 代码块时，若同步锁未释放，其他线程调用同一对象的其他synchronized 方法 或者 
+synchronized 代码块时将被阻塞，直至线程 A 释放该对象的同步锁。（注意：重点是其他）
+
+DEMO4，仅修改 doOtherThings 方法的修饰：
+
+可见，synchronized 获得的同步锁并非仅仅锁住代码，而是锁住整个对象。
+此时应提及 happens-before 原则，正因 happens-before 原则的存在才有此现象的发生。
+happens-before 原则的其中一条：
+管理锁定原则：一个 unLock 操作先行发生于后面对同一个锁的 lock 操作。
+（此处暂不作过多解释，解释起来能再写一篇文章了）
+DEMO5，仅修改 doOtherThings 方法：
+
+当线程 A 调用某对象的synchronized 方法 或者 synchronized 代码块时，无论同步锁是否释放，其他线程调用同一对象的其他 非 synchronized 方法 或者 
+非 synchronized 代码块时可立即调用。
+实例锁和全局锁
+以上 DEMO 实现的都是实例锁。锁住（作用域）的是具体某一对象实例。
+什么是全局锁？
+锁住整个 Class，而非某个对象或实例。
+注：单例型的实例锁不属于全局锁。
+全局锁的实现：
+静态 synchronized 方法
+DEMO7：
+
+static 声明的方法为全局方法，与对象实例化无关，所以 static synchronized 方法为全局同步方法，与对象实例化无关。
+synchronized 具体 Class 的代码块
+DEMO8：
+
+synchronized (Counter.class) 获得的同步锁是全局的，static synchronized 获得的同步锁也是全局的，同一个锁，所以达到同步效果。
+区分 synchronized (this) 与 synchronized (Class.class)
+DEMO9：
+
+synchronized (this) 获得的是具体对象实例 counter 的锁，而 synchronized (Counter.class) 获得的是全局锁，两把不同的锁，所以不能达到同步效果。
