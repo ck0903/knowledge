@@ -1,3 +1,12 @@
+grep命令：grep 'test' d*    显示所有以d开头的文件中包含 test的行
+grep 'test'| 'org'  显示所有包含test的文件，并且文件名包含org字段
+
+查找文件：find . name *org*  返回的结果，比如：/bin/org.apache.spark
+which命令查看系统命令是否存在，并返回系统命令所在的位置。使用which命令查看grep命令是否存在以及存在的目录的命令为”which grep“
+which返回的结果，例如：/bin/grep
+使用type命令查看系统中的某个命令是否为系统自带的命令。使用type命令查看cd命令是否为系统自带的命令；查看grep 是否为系统自带的命令。
+type cd  返回的结果，例如：cd is a shell builtin
+
 ==和equals的区别
 “==”比较的是，对象在内存中的地址
 “equals”比较的是，对象在堆中的内容是否相同
