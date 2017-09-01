@@ -1,3 +1,6 @@
+截取一个文件中的前十行到另一个文件
+sed -n '1,10p' 1.txt > 2.txt
+
 grep命令：grep 'test' d*    显示所有以d开头的文件中包含 test的行
 grep 'test'| 'org'  显示所有包含test的文件，并且文件名包含org字段
 
