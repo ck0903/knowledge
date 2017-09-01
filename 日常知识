@@ -1,3 +1,6 @@
+解压文件命令：tar -xvf a.tar.gz  a   或者 unzip a.zip a
+压缩文件命令：tar -zcvf a.tar.gz a  或者 zip -r a.zip a
+
 截取一个文件中的前十行到另一个文件
 sed -n '1,10p' 1.txt > 2.txt
 
