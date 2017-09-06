@@ -1,3 +1,5 @@
+将文件转换为unix格式：dos2unix *
+
 解压文件命令：tar -xvf a.tar.gz  a   或者 unzip a.zip a
 压缩文件命令：tar -zcvf a.tar.gz a  或者 zip -r a.zip a
 
