@@ -27,4 +27,4 @@
 ./bulk-data-to-hbase-and-createjson-for-es.sh /opt/Pack  pack.json pack.log
 查看json文件的行数：cat pack.json | wc -l
 超过两万行就将其分成几个文件  sed -n '1,20000p' 1.txt > 2.txt
-curl 172.18.18.100:9200/_bulk?pretty --data-binary /opt/pack.json
+curl 172.18.18.100:9200/_bulk?pretty --data-binary @/opt/pack.json
