@@ -1,0 +1,30 @@
+第一：先把包转成linux   使用命令：dos2unix *
+
+第二：修改conf里面的配置
+从/opt/client/HBase/hbase/conf底下的hbase-site.xml拷贝到conf里面，替换里面的hbase-site.xml
+从/opt/client/HDFS/etc中的core-site.xml拷贝到conf里面，替换里面的core-site.xml
+修改es-config.properties配置文件，将es的集群名称和对应的hostname修改进入配置文件中
+
+第三：修改bin里面的配置
+先修改/etc/hosts中的hostname 将其配上hbase-site.xml的名称  如：hacluster
+查看create-table.sh中是否有修改的需要，尤其是和base需要的hostname
+建立表格：sh create-table.sh  这里建立的有三张表
+将index-dynamic.sh.templete和index-static.sh.templete这两个文件改成脚本，如：index-dynamic.sh和index-static.sh   
+命令为：mv index-dynamic.sh.templete index-dynamic.sh
+建立es索引：sh index-dynamic.sh和sh index static.sh
+
+第四：从sql里面建立里面的表格
+打开两个sql中的文件，直接将命令拷贝到hbase中，这里建立5张表
+
+第五：配置算法库
+将GsFaceLib的地址配到/etc/profile中 如：export LD_LIBRARY_PATH=/opt/GsFaceLib/face_libs
+到FaceTest中执行 rpm -ivh superdog-1.0-1.i386.rpm  检查输出内容是否安装成功
+将testExtractFeature.bin文件加上执行权限  命令为：chmod +x testExtractFeature.bin
+将原来的sn.ini删除，然后执行./testExtractFeature.bin Aaron_Eckhart_0001.jpg生成新的sn.ini
+将新的文件给杨忠桃，生成文件替代，最后测试一遍 ./testExtractFeature.bin Aaron_Eckhart_0001.jpg
+
+第六：执行批量导入脚本
+./bulk-data-to-hbase-and-createjson-for-es.sh /opt/Pack  pack.json pack.log
+查看json文件的行数：cat pack.json | wc -l
+超过两万行就将其分成几个文件  sed -n '1,20000p' 1.txt > 2.txt
+curl 172.18.18.100:9200/_bulk?pretty --data-binary /opt/pack.json
