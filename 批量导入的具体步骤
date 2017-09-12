@@ -28,3 +28,8 @@
 查看json文件的行数：cat pack.json | wc -l
 超过两万行就将其分成几个文件  sed -n '1,20000p' 1.txt > 2.txt
 curl 172.18.18.100:9200/_bulk?pretty --data-binary @/opt/pack.json
+
+第七：使用脚本进行json文件的批量导入es中
+将刚执行脚本产生后的json文件，统一到一个json目录中 
+修改spilit-json-and-bulk-data-to-es.sh脚本，看地址是否正确
+执行sh spilit-json-and-bulk-data-to-es.sh /opt/RealTimeCompare/json/  data-to-es.log
