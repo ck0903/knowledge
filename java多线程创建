@@ -1,0 +1,31 @@
+//方法一，实现Thread接口
+public class ThreadDemo extends Thread{
+    public void run(){
+        System.out.println("线程"+Thread.currentThread().getName());
+    }
+    public static void main(String[] args){
+        ThreadDemo t1 = new ThreadDemo();//创建线程
+        t1.start();//启动线程
+         
+        //创建第二个线程
+        ThreadDemo t2 = new ThreadDemo();//创建线程
+        t2.start();//启动线程
+    }
+}
+
+//方式二，实现Runnable接口
+public class ThreadDemo implements Runnable{
+    public void run(){
+        System.out.println("线程"+Thread.currentThread().getName());
+    }
+    public static void main(String[] args){
+        //创建线程实例
+        ThreadDemo td = new ThreadDemo()
+        //创建线程1
+        Thread t1 = new Thread(td);
+        t1.start();  
+        //创建线程2
+        Thread t2 = new Thread(td);
+        t2.start();  
+    }
+}
