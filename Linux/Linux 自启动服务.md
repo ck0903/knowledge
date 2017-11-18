@@ -1,3 +1,4 @@
+方法一：
 ```
 Linux机器重启后首先会去读取/etc/init.d目录下的脚本，所以如果想要某个程序在开机时启动则可以在/etc/ininit.d目录下写个脚本，并且设置一下开机启动服务的顺序就可以了，下面以设置tomcat程序开机自启动为例讲解一下设置过程
 
@@ -25,6 +26,24 @@ sh /usr1/tools/tomcat/bin/catalina.sh start
 3.将tomcat脚本设置成系统启动时自动执行
  chkconfig --add tomcat
  执行chkconfig --list tomcat命令查看tomcat服务的启动级别
+ 如果出现类似如下的内容
+ [root@s100 init.d]# chkconfig --add elastic 
+ service elastic does not support chkconfig
+ 
+ 只需要在 #!/bin/bash 之后。
+
+  # chkconfig: 2345 10 90 
+  # description: myservice ....
+  其中2345是默认启动级别，级别有0-6共7个级别。
+　　等级0表示：表示关机 　　
+　　等级1表示：单用户模式 　　
+　　等级2表示：无网络连接的多用户命令行模式 　　
+　　等级3表示：有网络连接的多用户命令行模式 　　
+　　等级4表示：不可用 　　
+　　等级5表示：带图形界面的多用户模式 　　
+　　等级6表示：重新启动
+10是启动优先级，90是停止优先级，优先级范围是0－100，数字越大，优先级越低。
+ 
  
 上图表示tomcat服务在启动级别为3、5的情况下会自动启动，一般情况下直接执行chkconfig --add命令时默认级别都为3和5
 下面介绍一下Linux系统的运行级别：
@@ -44,6 +63,8 @@ chkconfig [--level 1/2/../6] xxxd on/off//设置xxxd用服务在n状态为开/�
 chkconfig --del xxxd //将任务列表中的xxxd服务删除
 
 ```
+
+方法二：
 
 ```
 1、开机自启动tomcat（非root用户）
