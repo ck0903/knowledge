@@ -1,0 +1,6 @@
+数据按照MapReduce方式导出：
+$ bin/hbase org.apache.hadoop.hbase.mapreduce.Export tablename outputdir   //默认的存放地址是在HDFS上，需要跟上两个参数：表名和数据存放地址
+数据按照MapReduce方式导入：
+$ bin/hbase org.apache.hadoop.hbase.mapreduce.Import tablename inputdir    //默认去取数据的地址也在HDFS上，跟上参数：表名和数据来源地址
+
+还有一种endpoint数据导出方式：bin/hbase org.apache.hadoop.hbase.coprocessor.Export tablename outputdir
