@@ -1,0 +1,6 @@
+1、删除Kafka中topic的命令：./kafka-topics.sh --delete --zookeeper 172.18.18.102:2181 --topic feature
+2、此时topic并不是被真正删除了，而是被标记为marked for deletion
+3、可以通过kafka命令查询此时的topic状态：./kafka-topic.sh --zookeeper 172.18.18.l02:2181 --list
+4、如果想真正删除topic，则需要进入zookeeper的客户端进行删除：./bin/zkCli.sh
+5、ls /brokers/topics
+6、真正删除topic：deleteall /brokers/topics/feature
