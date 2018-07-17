@@ -1,0 +1,1 @@
+tcpdump -i any port 7776 -s 0 -v -w /opt/msg.cap     其中7776是端口号
