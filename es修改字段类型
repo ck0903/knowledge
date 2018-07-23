@@ -1,0 +1,14 @@
+curl -XPUT 172.18.18.100:9200/dynamic/person/_mapping -d '{
+  "person": {
+        "properties": {
+            "clusterid": {
+                "type":   "text",
+                "fields": {
+                    "keyword": { "type": "keyword" }
+                }
+            }
+        }
+    }
+}'
+
+其实相当于是给text类型添加一个类型
