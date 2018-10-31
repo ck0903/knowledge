@@ -1,0 +1,24 @@
+ES根据条件批量删除 
+（删除字段为空的）
+ http://191.191.190.194:9200/dynamiccar/car/_delete_by_query 
+ {
+   "query": {
+      "bool": {
+      	"must_not": {
+      		"exists": {
+      			"field": "plate_licence"
+      		}
+      	}
+      }
+   }
+}
+
+（删除匹配字段）
+http://191.191.190.194:9200/dynamiccar/car/_delete_by_query 
+{
+   "query": {
+      "match": {
+         "plate_licence": "未识别"
+      }
+   }
+}
