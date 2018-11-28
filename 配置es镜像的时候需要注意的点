@@ -1,2 +1,10 @@
-因为起es的时候内存过小，所以需要在/etc/sysctl.conf中配上vm.max_map_count=655360参数
+1、因为起es的时候内存过小，所以需要在/etc/sysctl.conf中配上vm.max_map_count=655360参数
 使用sysctl -p /etc/sysctl.conf重新加载
+
+
+2、因为启动es的时候 bootstrap checks failed
+所以需要在/etc/security/limits.conf中添加参数
+* soft nofile 65536
+* hard nofile 131072
+* soft nproc 2048
+* hard nproc 4096
